@@ -1,6 +1,6 @@
 $repositoryFolder = (Get-Item $PSCommandPath).Directory.Parent.Parent.Parent.FullName
 
-#i WANT IT UPLOADED
+#First difference
 
 $hidePDF = $false
 $workingDirectory = "C:\Temp\$($file._Name)"
@@ -32,6 +32,7 @@ if($openResult) {
     }
     $closeResult = Close-Document
 }
+
 Clean-Up -folder $workingDirectory
 
 if(-not $openResult) {
