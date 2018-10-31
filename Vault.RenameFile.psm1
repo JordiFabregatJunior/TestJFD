@@ -1,17 +1,24 @@
-function Rename-File($vFile,$NewFileName){
-    $fileExtension = [System.IO.Path]::GetExtension($File.Name)
-    $newFileName = "$($NewFileName)" + "$($fileExtension)"
-    $vaultfiles = $vault.DocumentService.GetFilesByMasterId($vFile.MasterId)
-    $latestFileVersion = $vaultfiles.Length-1
-    $file = $vaultfiles[$latestFileVersion]
+Import-Module PowerVault
+Open-VaultConnection -Server "2019-sv-12-E-JFD" -Vault "Demo-JF" -user "Administrator"
+$filename = "TestExcel1.xlsx"			
+$NewFileName = "TestExcel2"
+$PVaultFile = Get-VaultFile -Properties @{Name = $filename}
+#$downloadTicket = New-Object Autodesk.Connectivity.WebServices.ByteArray
+#$vault.DocumentService.UndoCheckoutFile($PVaultFile.MasterId,[ref]$downloadTicket)
+#Rename-File -PVaultFile $PVaultFile -NewFileName $NewFileName
+Rename-File-CheckTest -PVaultFile $PVaultFile -NewFileName $NewFileName
 
-    $fileAssocs = $vault.DocumentService.GetFileAssociationsByIds($file.Id, "All", $false, "All", $false, $false, $true)
+function GetFileAssocParams($VFile){
+    $parentAssociationType, $childAssociationType = @('All','All')
+    $parentRecurse, $childRecurse = $false, $false
+    $includeRelatedDocuments = $false
+    $includeHidden = $true
+
+    $fileAssocs = $vault.DocumentService.GetFileAssociationsByIds($VFile.Id, $parentAssociationType, $parentRecurse, $childAssociationType, $childRecurse, $includeRelatedDocuments, $includeHidden)
     $fileAssocs = $fileAssocs[0]
     $fileAssocParams = @()
-    if($fileAssocs.FileAssocs -ne $null)
-    {
-	    foreach($fileAssoc in $fileAssocs.FileAssocs)
-	    {
+    if($fileAssocs.FileAssocs -ne $null){
+	    foreach($fileAssoc in $fileAssocs.FileAssocs){
 		    $fileAssocParam = New-Object Autodesk.connectivity.Webservices.FileAssocParam
 		    $fileAssocParam.CldFileId = $fileAssoc.CldFile.Id
 		    $fileAssocParam.ExpectedVaultPath = $fileAssoc.ExpectedVaultPath
@@ -21,25 +28,34 @@ function Rename-File($vFile,$NewFileName){
 		    $fileAssocParams += $fileAssocParam
 	    }
     }
-    $fileIteration = New-Object Autodesk.DataManagement.Client.Framework.Vault.Currency.Entities.FileIteration($vaultConnection,$file)
-    $settings = New-Object Autodesk.DataManagement.Client.Framework.Vault.Settings.AcquireFilesSettings($vaultConnection)
-    $settings.AddFileToAcquire($fileIteration,"Download")
-    $acquiredFiles = $vaultConnection.FileManager.AcquireFiles($settings)
-    $BOMfile = $acquiredFiles.FileResults[0].File
-    $BOM = $vault.DocumentService.GetBOMByFileId($BOMfile.EntityIterationId)
-    
-    $buffer = New-Object Autodesk.Connectivity.WebServices.ByteArray
-    $downloadTicket = New-Object Autodesk.Connectivity.WebServices.ByteArray
-    $lastWrite = $file.ModDate
+    return ,$fileAssocParams
+}
 
-    $CheckedOutFile = $vault.DocumentService.CheckoutFile($file.Id, "Master", [System.Environment]::MachineName, $file.LocalPath, [string].empty, [ref] $buffer)
+function Rename-File($PVaultFile,$NewFileName){
+    $fileExtension = [System.IO.Path]::GetExtension($PVaultFile.Name)
+    $newFileName = "$($NewFileName)" + "$($fileExtension)"
+    $vFile = $vault.DocumentService.GetLatestFileByMasterId($PVaultFile.MasterId)
+
+    if($vFile.CheckedOut){
+        throw "The file $($vFile.Name) is already checked out, so it can be renamed"
+    }
+
+    $fileAssocParams = GetFileAssocParams($vFile)
+    $BOM = $vault.DocumentService.GetBOMByFileId($PVaultFile.Id)
+ 
+    $downloadTicket = New-Object Autodesk.Connectivity.WebServices.ByteArray
+    $lastWrite = $vFile.ModDate
+    $comment = [string].empty
+    $buffer = New-Object Autodesk.Connectivity.WebServices.ByteArray
+
+    $CheckedOutFile = $vault.DocumentService.CheckoutFile($vFile.Id, "Master", [System.Environment]::MachineName, $vFile.LocalPath, $comment, [ref] $buffer)
     try {
         if($CheckedOutFile){
-            $CheckedInFile = $vault.DocumentService.CheckinUploadedFile($file.MasterId,"",$false,$lastWrite,$fileAssocParams,$BOM,$false,$newFileName,$fileIteration.FileClassification,$hidden,$null)
+            $CheckedInFile = $vault.DocumentService.CheckinUploadedFile($vFile.MasterId,"",$false,$lastWrite,$fileAssocParams,$BOM,$false,$newFileName,$vFile.FileClass,$hidden,$null)
         }
     }
-    catch {
-        $UndoCheckedOutFile = $vault.DocumentService.UndoCheckoutFile($file.MasterId,[ref]$downloadTicket)
-        throw "The file could not be checked out"
+    catch{
+        $UndoCheckedOutFile = $vault.DocumentService.UndoCheckoutFile($vFile.MasterId,[ref]$downloadTicket)
+        throw "The file $($vFile.Name) could not be checked out"
     }
 }
