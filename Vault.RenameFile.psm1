@@ -1,3 +1,4 @@
+#Tesrting Indexing
 function Rename-File($vFile,$NewFileName){
     $fileExtension = [System.IO.Path]::GetExtension($File.Name)
 	$newFileName = "$($NewFileName)" + "$($fileExtension)"
