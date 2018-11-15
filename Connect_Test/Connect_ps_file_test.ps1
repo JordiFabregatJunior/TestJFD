@@ -1,6 +1,7 @@
 $repositoryFolder = (Get-Item $PSCommandPath).Directory.Parent.Parent.Parent.FullName
 
-#i WANT IT UPLOADED checkedout by test-branch in vscode
+
+#i WANT IT UPLOADED yes I want it!
 
 $hidePDF = $false
 $workingDirectory = "C:\Temp\$($file._Name)"
