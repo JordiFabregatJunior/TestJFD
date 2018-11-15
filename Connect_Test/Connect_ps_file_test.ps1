@@ -1,6 +1,6 @@
 $repositoryFolder = (Get-Item $PSCommandPath).Directory.Parent.Parent.Parent.FullName
 
-#i WANT IT UPLOADED
+#i WANT IT UPLOADED yes I want it!
 
 $hidePDF = $false
 $workingDirectory = "C:\Temp\$($file._Name)"
