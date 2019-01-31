@@ -1,0 +1,197 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		SizeToContent="WidthAndHeight"
+		Title="Projekt Plot"
+		WindowStartupLocation="CenterScreen"
+		ResizeMode="CanResizeWithGrip">
+	<Window.Resources>
+		<Style TargetType="Button">
+			<Setter Property="Margin"
+					Value="5" />
+			<Setter Property="Height"
+					Value="30" />
+			<Setter Property="FontSize"
+					Value="14" />
+			<Setter Property="Width"
+					Value="140" />
+		</Style>
+		<Style TargetType="Label">
+			<Setter Property="FontSize"
+					Value="12" />
+		</Style>
+		<Style TargetType="TextBox">
+			<Setter Property="FontSize"
+					Value="12" />
+			<Setter Property="Height"
+					Value="20" />
+			<Setter Property="IsReadOnly"
+					Value="True" />
+		</Style>
+
+		<Style x:Key="DisableIfNoFilesOrNoProject"
+			   TargetType="Button"
+			   BasedOn="{StaticResource {x:Type Button}}">
+			<Setter Property="IsEnabled"
+					Value="True" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding ElementName=FileView, Path=HasItems}"
+							 Value="false">
+					<Setter Property="IsEnabled"
+							Value="False" />
+				</DataTrigger>
+				<DataTrigger Binding="{Binding ElementName=TxtCurrentProjectNumber, Path=Text}"
+							 Value="">
+					<Setter Property="IsEnabled"
+							Value="False" />
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="ChangeTextIfNoFiles"
+			   TargetType="Label"
+			   BasedOn="{StaticResource {x:Type Label}}">
+			<Setter Property="Foreground"
+					Value="Black" />
+			<Setter Property="Content"
+					Value="Selektiere die Dateien welche geplottet werden:" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding ElementName=TxtCurrentProjectNumber, Path=Text}"
+							 Value="">
+					<Setter Property="Foreground"
+							Value="Red" />
+					<Setter Property="Content"
+							Value="Keine Projekt-Nummer im ausgewählten Ordner gefunden!" />
+				</DataTrigger>
+				<DataTrigger Binding="{Binding ElementName=FileView, Path=HasItems}"
+							 Value="false">
+					<Setter Property="Foreground"
+							Value="Red" />
+					<Setter Property="Content"
+							Value="Keine Zeichnungen (IDWs) im ausgewählten Ordner gefunden!" />
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="RedIfEmpty"
+			   TargetType="TextBox"
+			   BasedOn="{StaticResource {x:Type TextBox}}">
+			<Setter Property="Background"
+					Value="White" />
+			<Style.Triggers>
+				<Trigger Property="Text"
+						 Value="{x:Null}">
+					<Setter Property="Background"
+							Value="Red" />
+				</Trigger>
+				<Trigger Property="Text"
+						 Value="">
+					<Setter Property="Background"
+							Value="Red" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</Window.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Label FontSize="15"
+			   Style="{StaticResource ChangeTextIfNoFiles}"
+			   HorizontalAlignment="Center"
+			   FontWeight="Bold" />
+		<DataGrid Name="FileView"
+				  Grid.Row="1"
+				  Margin="10"
+				  HorizontalAlignment="center"
+				  AutoGenerateColumns="False"
+				  VerticalAlignment="Top"
+				  AlternatingRowBackground="#FFDEDEDE"
+				  SelectionUnit="Cell"
+				  SelectionMode="Single"
+				  BorderBrush="Orange">
+			<DataGrid.ContextMenu>
+				<ContextMenu>
+					<ListBoxItem Name="BtnSelectAll"
+								 Content="Aktivere alle Dateien" />
+					<ListBoxItem Name="BtnUnselectAll"
+								 Content="Deaktiviere alle Dateien" />
+				</ContextMenu>
+			</DataGrid.ContextMenu>
+			<DataGrid.Columns>
+				<DataGridTemplateColumn>
+					<DataGridTemplateColumn.Header>
+						<TextBlock Text="Plot" />
+					</DataGridTemplateColumn.Header>
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<CheckBox IsChecked="{Binding TriggerJob, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTextColumn Header="Dateinamen"
+									Binding="{Binding _Name}"
+									HeaderStringFormat="Dateinamen"
+									IsReadOnly="True" />
+				<DataGridTextColumn Header="Pfad"
+									HeaderStringFormat="Pfad"
+									Binding="{Binding _FullPath}"
+									IsReadOnly="True" />
+				<DataGridTextColumn Header="Verknüpfung"
+									Binding="{Binding LinkPath}"
+									HeaderStringFormat="Verknüpfung"
+									IsReadOnly="True" />
+			</DataGrid.Columns>
+		</DataGrid>
+		<GroupBox Grid.Row="2"
+				  Margin="10"
+				  Header="Details"
+				  BorderBrush="Orange">
+			<Grid HorizontalAlignment="Center">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Label Content="Ausgewählter Ordner:" />
+				<TextBox Grid.Column="1"
+						 Name="TxtCurrentFolder" />
+				<Label Grid.Row="1"
+					   Content="Projekt-Nummer:" />
+				<TextBox Grid.Row="1"
+						 Grid.Column="1"
+						 Style="{StaticResource RedIfEmpty}"
+						 Name="TxtCurrentProjectNumber" />
+				<Label Content="Dateien im Ordner:"
+					   Grid.Column="2" />
+				<Label Grid.Column="3"
+					   Name="TxtTotalFilesInFolder" />
+				<Label Grid.Row="1"
+					   Grid.Column="2"
+					   Content="Davon IDWs und nicht ausgechecked:" />
+				<Label Grid.Row="1"
+					   Grid.Column="3"
+					   Name="TxtValidFilesInFolder" />
+			</Grid>
+		</GroupBox>
+		<StackPanel Grid.Row="3"
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
+			<Button Content="Starte Projekt Plot"
+					TabIndex="1"
+					Style="{StaticResource DisableIfNoFilesOrNoProject}"
+					Name="BtnTriggerJobs" />
+			<Button Content="Abbrechen"
+					TabIndex="2"
+					Name="BtnCancel" />
+		</StackPanel>
+	</Grid>
+</Window>
