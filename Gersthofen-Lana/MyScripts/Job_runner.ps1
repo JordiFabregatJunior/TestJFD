@@ -1,7 +1,7 @@
 ﻿<#$measuringPerformance = @{}
 Import-Module PowerVault
-Open-VaultConnection -Server "2019-sv-12-E-JFD" -Vault "Demo-JF" -user "Administrator"
-$filename = "ANH-001000410.pdf"
+Open-VaultConnection -Server "localhost" -Vault "VaultJFD" -user "Administrator"
+$filename = "ASSY-Assy1-001.iam"
 $vfile = Get-VaultFile -Properties @{"Name" = $filename}
 $file = $vault.DocumentService.GetFileById($vFile.id)
 $folder = $vault.DocumentService.GetFolderByPath("$/Designs/TESTS/SPX")
