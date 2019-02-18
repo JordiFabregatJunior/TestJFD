@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+	<?define UpgradeCode="ea635ee2-3817-464f-b465-637a19a189b6"?>
+	<?define WikiLink="https://github.com/coolOrangeProjects/jossi/wiki"?>
+	<?define IconName="..\Resources\coolOrange.ico"?>
+	<?define PVersion="$(var.Major).$(var.Minor).$(var.Build).$(var.Revision)"?>
+  <?define VaultYear="Vault 2019"?>
+  <?define PName="JOSSI - Custom Jobs"?>
+  <?define PShortVersion="$(var.Major).$(var.Minor)"?>
+  <?define CompanyDirectory="coolOrange"?>
+	
+	<?if $(var.Platform) = x64 ?>
+	  <?define Win64 = "yes" ?>
+	  <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+	<?else ?>
+	  <?define Win64 = "no" ?>
+	  <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+	<?endif ?>
+</Include>

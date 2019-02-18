@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:ps="http://schemas.microsoft.com/wix/PSExtension"
+	 xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+	<?include Includes\ProductVariables.wxi ?>
+	<Product Id="*"
+			 Name="$(var.CompanyDirectory) $(var.PName)"
+			 Language="1033"
+			 Manufacturer="$(var.CompanyDirectory) s.r.l."
+			 UpgradeCode="$(var.UpgradeCode)"
+			 Version='$(var.PVersion)'>
+		<Package Id="*"
+				 Keywords="Installer, Setup"
+				 Description="$(var.CompanyDirectory) $(var.PName) Installer"
+				 Manufacturer="$(var.CompanyDirectory) s.r.l."
+				 InstallerVersion="305"
+				 Compressed="yes"
+				 Languages="1033"
+				 SummaryCodepage="1252" />
+
+		<Media Id="1"
+			   Cabinet="media1.cab"
+			   EmbedCab="yes" />
+
+		<?include Includes\MainInclude.wxi ?>
+
+		<Feature Id="ProductFeature"
+				 Title="pdfExport"
+				 Level="1">
+      <ComponentGroupRef Id="HeatGenerated_PowerJobsFiles" />
+			<ComponentGroupRef Id="SETUP_UI" />
+		</Feature>
+
+     <Property Id="SAMEVERSIONINSTALLED" />
+		<Upgrade Id="$(var.UpgradeCode)">
+			<UpgradeVersion OnlyDetect="no"
+							Property="SAMEVERSIONINSTALLED"
+							Minimum="$(var.PVersion)"
+							Maximum="$(var.PVersion)"
+							IncludeMaximum="yes"
+							IncludeMinimum="yes"
+						>
+			</UpgradeVersion>
+		</Upgrade>
+	  
+	  <Condition
+	    Message="This application requires powerVault v18 or later. Please install the latest version of powerVault and then run again this installer.">
+	    <![CDATA[Installed OR POWERVAULTINSTALLED]]>
+	  </Condition>
+
+		<Condition Message="This application does not support upgrading it with the same version: $(var.PVersion)">
+			NOT SAMEVERSIONINSTALLED
+		</Condition>
+
+
+		<PropertyRef Id="POWERSHELLVERSION" />
+		<Condition
+			Message="This application requires Powershell 2.0. Please install the required Powershell version and then run again this installer.">
+			<![CDATA[Installed OR POWERSHELLVERSION >= "2.0"]]>
+		</Condition>
+
+		<MajorUpgrade Schedule="afterInstallInitialize"
+					  DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit."/>
+	</Product>
+</Wix>
