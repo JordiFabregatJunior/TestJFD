@@ -9,10 +9,10 @@ $job = Add-VaultJob -Name "" -Description "-" -Parameters @{EntityClassId = "FIL
 ####________NoTouching!_________#>
 
 
+$folder = $folder = $vault.DocumentService.GetFolderByPath($file.Path)
 
 
-
-
+'$/Designs/TESTS/JOSSI/NeutralFormats'
 
 $vaultPath = '$/Designs/TESTS/Logstrup-TESTS/PART-FLA-0001.ipt'
 $LocalPaTH = "C:\VaultJFD\2019-C-10-E-JFD\Designs\TESTS\Logstrup-TESTS\PART-FLA-0001.ipt"
