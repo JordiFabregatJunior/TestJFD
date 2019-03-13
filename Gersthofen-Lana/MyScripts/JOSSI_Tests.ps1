@@ -2,10 +2,37 @@
 
 <#Import-Module PowerVault
 Open-VaultConnection -Server "localhost" -Vault "VaultJFD" -user "Administrator"
-$filename = "DRAW-JOSSI_Test-000.idw.pdf"
+$filename = "TestPDF.idw"
 $file = Get-VaultFile -Properties @{"Name" = $filename}
 $job = Add-VaultJob -Name "Jossi_PDF" -Description "Jossi PDF" -Parameters @{EntityClassId = "FILE"; EntityId = $file.Id} -Priority 10
 #>
+
+
+
+$latestFile = $vault.DocumentService.GetLatestFileByMasterId($File.MasterId)
+$fileVersions = $vault.DocumentService.GetFilesByMasterId($File.MasterId)
+$lastVersion = $latestFile.MaxCkInVerNum
+for($i =0; $i -lt $lastVersion; $i++){
+    $RevPropRequired = $false
+    $Ver = $lastVersion - $i
+    $fileVer = $fileVersions | Where-Object { $_.VerNum -eq $ver}
+    $vfileVer = Get-VaultFile -FileId $fileVer.Id
+    if($ver -eq 1){
+        Write-Host "The file $($File) has not been changed of state yet. PDF job not triggered!"
+    }
+    $filePreVer = $fileVersions | Where-Object { $_.VerNum -eq $($ver-1)}
+    $vfilePreVer = Get-VaultFile -FileId $filePreVer.Id    
+    If($vfileVer.'_State(Ver)' -ne $vfilePreVer.'_State(Ver)'){
+        If($vfileVer.'_State(Ver)' -eq 'Freigegeben' -and $vfilePreVer.'_State(Ver)' -eq 'Freigegeben Prototyp' ){
+            $RevPropRequired = $true
+        }
+        return @($fileVer.CreateUserName, $fileVer.CreateDate, $RevPropRequired)
+    }    
+}
+
+
+
+
 
 $hidePDF = $false
 $workingDirectory = "C:\Temp\$($file._Name)"

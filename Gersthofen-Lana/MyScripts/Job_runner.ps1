@@ -7,6 +7,9 @@ $file = $vault.DocumentService.GetFileById($vFile.id)
 $folder = $vault.DocumentService.GetFolderByPath("$/Designs/TESTS/SPX")
 $job = Add-VaultJob -Name "" -Description "-" -Parameters @{EntityClassId = "FILE"; EntityId = $vfile.Id} -Priority 10
 ####________NoTouching!_________#>
+$filename = "TestPDF_1.pdf"
+$PDFfile = Get-VaultFile -Properties @{"Name" = $filename}
+$file = Update-VaultFile -File $ModifiedFile._FullPath -AddAttachments @($PDFfile._FullPath)
 
 
 $folder = $folder = $vault.DocumentService.GetFolderByPath($file.Path)
