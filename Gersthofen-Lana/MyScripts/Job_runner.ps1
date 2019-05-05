@@ -1,18 +1,21 @@
 ﻿<#$measuringPerformance = @{}
 Import-Module PowerVault
-Open-VaultConnection -Server "2019-sv-12-E-JFD" -Vault "Demo-JF" -user "Administrator"
-$filename = "ANH-001000410.pdf"
+Open-VaultConnection -Server "localhost" -Vault "VaultJFD" -user "Administrator"
+$filename = "ASSY-Assy1-001.iam"
 $vfile = Get-VaultFile -Properties @{"Name" = $filename}
 $file = $vault.DocumentService.GetFileById($vFile.id)
 $folder = $vault.DocumentService.GetFolderByPath("$/Designs/TESTS/SPX")
 $job = Add-VaultJob -Name "" -Description "-" -Parameters @{EntityClassId = "FILE"; EntityId = $vfile.Id} -Priority 10
 ####________NoTouching!_________#>
+$filename = "TestPDF_1.pdf"
+$PDFfile = Get-VaultFile -Properties @{"Name" = $filename}
+$file = Update-VaultFile -File $ModifiedFile._FullPath -AddAttachments @($PDFfile._FullPath)
 
 
+$folder = $folder = $vault.DocumentService.GetFolderByPath($file.Path)
 
 
-
-
+'$/Designs/TESTS/JOSSI/NeutralFormats'
 
 $vaultPath = '$/Designs/TESTS/Logstrup-TESTS/PART-FLA-0001.ipt'
 $LocalPaTH = "C:\VaultJFD\2019-C-10-E-JFD\Designs\TESTS\Logstrup-TESTS\PART-FLA-0001.ipt"

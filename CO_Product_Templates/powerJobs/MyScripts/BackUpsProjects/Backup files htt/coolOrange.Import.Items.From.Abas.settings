@@ -1,9 +1,0 @@
-﻿{
- "Trigger":
-  {
-    "TimeBased": "0 0/10 * 1/1 * ? *",
-    "Vault": "HTT_Testsystem",
-    "Priority": 10,
-    "Description": "This job is triggered every 10 minutes by powerJobs."
-  }
-}
