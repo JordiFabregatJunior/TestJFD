@@ -1,5 +1,5 @@
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$Token = '826b9fb1e70c85e33f4b88114ffd6dd7435a3b24'
+$Token = '8a353579eb0b2036ce492f378d8075673cc798e0'
 $Base64Token = [System.Convert]::ToBase64String([char[]]$Token)
 $Headers = @{Authorization= 'Basic {0}' -f $Base64Token
 Accept = "application/vnd.github.symmetra-preview+json"
