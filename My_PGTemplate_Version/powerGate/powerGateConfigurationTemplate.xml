@@ -1,0 +1,28 @@
+﻿<Root>
+  <UnitOfMeasures>
+    <Entry Key="BOX" Value="Box" />
+    <Entry Key="CAN" Value="Can" />
+    <Entry Key="DAY" Value="Day" />
+    <Entry Key="GR" Value="Gram" />
+    <Entry Key="HOUR" Value="Hour" />
+    <Entry Key="KG" Value="Kilogram" />
+    <Entry Key="L" Value="Liter" />
+    <Entry Key="MILES" Value="Miles" />
+    <Entry Key="PCS" Value="Piece" />
+    <Entry Key="PACK" Value="Pack" />
+    <Entry Key="PAIR" Value="Pair" />
+    <Entry Key="PALLET" Value="Pallet" />
+	<Entry Key="SOME" Value="Somethinf" />
+  </UnitOfMeasures>
+  <MaterialTypes>
+    <Entry Key="CONSTRUCTION" Value="Construction Part" />
+    <Entry Key="PURCHASED" Value="Purchased Part" />
+    <Entry Key="STANDARD" Value="Catalog Part" />
+  </MaterialTypes>
+  <BomStates>
+    <Entry Key="New" Value="New" />
+    <Entry Key="Certified" Value="Certified" />
+    <Entry Key="Under Development" Value="Under Development" />
+    <Entry Key="Closed" Value="Closed" />
+  </BomStates>
+</Root>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DynamicProperties>
+  <DynamicPropertiesCategory Category="Project" Type="Folder">
+    <DynamicProperty>Title</DynamicProperty>
+    <DynamicProperty>Description</DynamicProperty>
+    <DynamicProperty>Project</DynamicProperty>
+    <DynamicProperty>Customer Name</DynamicProperty>
+    <DynamicProperty>Customer Code</DynamicProperty>
+    <DynamicProperty>HarvestProjectID</DynamicProperty>
+    <DynamicProperty>flcProjectId</DynamicProperty>
+  </DynamicPropertiesCategory>
+  <DynamicPropertiesCategory Category="Folder" Type="Folder">
+    <DynamicProperty>Description</DynamicProperty>
+    <DynamicProperty>flcProjectId</DynamicProperty>
+  </DynamicPropertiesCategory>
+</DynamicProperties>
