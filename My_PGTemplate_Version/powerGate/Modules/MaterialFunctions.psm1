@@ -1,5 +1,5 @@
-﻿$materialEntitySet = "Materials"
-$materialEntityType = "Material"
+﻿$materialEntitySet = "ItemMethod"
+$materialEntityType = "ItemEntity"
 
 function GetErpMaterial($number) {
 	if ([string]::IsNullOrEmpty($number)) { 
@@ -7,7 +7,7 @@ function GetErpMaterial($number) {
 		Add-Member -InputObject $erpMaterial -Name "_ErrorMessage" -Value "Number is empty!" -MemberType NoteProperty -Force
 		return $erpMaterial
 	}
-	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Key @{ Number = $number }
+	$erpMaterial = Get-ERPObject -EntitySet $materialEntitySet -Key @{"Number"=$number.toUpper()}
 	$erpMaterial = CheckResponse -entity $erpMaterial
 	
 	Add-Member -InputObject $erpMaterial -Name "IsCreate" -Value $false -MemberType NoteProperty -Force

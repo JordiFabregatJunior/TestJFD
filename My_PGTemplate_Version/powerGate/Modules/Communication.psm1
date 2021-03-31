@@ -4,7 +4,7 @@ Import-Module powerGate
 #TODO: configure the powerGate server url and port
 $powerGateServerName = "localhost"
 $powerGateServerPort = "8080"
-$powerGateServerErpPluginUrl = "http://$($powerGateServerName):$($powerGateServerPort)/coolOrange/ErpServices"
+$powerGateServerErpPluginUrl = "http://w10-2019-demo:8080/coolOrange/Navision"
 
 function ConnectToErpServer {
 	$connected = Connect-ERP -Service $powerGateServerErpPluginUrl -OnConnect $onConnect

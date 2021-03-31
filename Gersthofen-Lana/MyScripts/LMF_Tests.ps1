@@ -96,13 +96,13 @@ function Check-FourEyes ($files){
                 if ($vfile._State -eq "Work in Progress" -and $vfile._NewState -eq "Released"){
                     Show-Inspector
                     if($LastStateChangeUser -eq $currentUserId){
-                        Add-VaultRestriction -EntityName $vfile._Name -Message "Datei kann nicht von der gleichen Person geprüft und freigegeben werden!"
+                        Add-VaultRestriction -EntityName $vfile._Name -Message "Datei kann nicht von der gleichen Person geprï¿½ft und freigegeben werden!"
                     }
                 }    
             } elseif ($lfcDef -eq "Artaker flexibel" -and $vfile._Extension -in @("dwg","idw")){
-                if ($vfile._State -in @("Work in Progress", "Zu überprüfen") -and $vfile._NewState -eq "Freigegeben"){
+                if ($vfile._State -in @("Work in Progress", "Zu ï¿½berprï¿½fen") -and $vfile._NewState -eq "Freigegeben"){
                     if($LastStateChangeUser -eq $currentUserId){
-                        Add-VaultRestriction -EntityName $vfile._Name -Message "Datei kann nicht von der gleichen Person geprüft und freigegeben werden!"
+                        Add-VaultRestriction -EntityName $vfile._Name -Message "Datei kann nicht von der gleichen Person geprï¿½ft und freigegeben werden!"
                     }
                 }    
             }
