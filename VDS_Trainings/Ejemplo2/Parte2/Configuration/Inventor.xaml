@@ -208,6 +208,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -236,8 +238,8 @@
                       Visibility="{Binding NotEditMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
             <Label Grid.Row="2" Grid.Column="0" Content="{Binding UIString[LBL31], FallbackValue=Number}"
                    Visibility="{Binding Visibility, ElementName=DSNumSchmsCtrl}" Height="Auto" />
-            <WPF:DSNumSchemeCtrl x:Name="DSNumSchmsCtrl" Grid.Row="2" Grid.Column="1"
-                                 Scheme="{Binding SelectedItem, ElementName=NumSchms}"
+            <!--Scheme = "{Binding SelectedItem, ElementName=NumSchms}"-->
+            <WPF:DSNumSchemeCtrl x:Name="DSNumSchmsCtrl" Grid.Row="2" Grid.Column="1"                                 
                                  IsEnabled="{Binding IsEnabled, ElementName=NumSchms}"
                                  GeneratedNumberProperty="DocNumber"
                                  Visibility="{Binding CreateMode, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -255,6 +257,15 @@
             <Label x:Name="lblComments" Content="{Binding UIString[Comments], FallbackValue=Comments}" Grid.Row="4" BorderThickness="1" Height="Auto"/>
             <TextBox x:Name="txtComments" Grid.Column="1" Grid.Row="4" TextWrapping="Wrap" Text="{Binding Prop[Comments].Value}" BorderThickness="0,1,1,1" 
                      VerticalContentAlignment="Top" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="50" />
+            <Label x:Name="lblFamiliaProcesos" Content="Familia Proceso" Grid.Row="5" Height="Auto"/>
+            <ComboBox x:Name="CmbxFamiliaProcesos" Grid.Column="1" Grid.Row="5"
+                        IsEnabled="{Binding HasItems, RelativeSource={RelativeSource Self}}" />
+            <Label x:Name="lblProcesos" Content="Código Proceso" Grid.Row="6" Height="Auto"/>
+            <ComboBox x:Name="CmbxIDProcesos" Grid.Column="1" Grid.Row="6"
+                        ItemsSource="{Binding PsList[GetIDProcesses]}"
+                        SelectedIndex="0"
+                        SelectedValue="{Binding Prop[Código Proceso].Value}"
+                        IsEnabled="{Binding HasItems, RelativeSource={RelativeSource Self}}" />
             <Border
                 BorderBrush="White"
                 Visibility="{Binding CopyMode, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="5"

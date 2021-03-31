@@ -1,4 +1,62 @@
 ﻿
+Import-Module 'C:\ProgramData\coolOrange\powerJobs\Modules\cO.Logging.psm1'
+
+$global:SpecificProcesses = @(
+	New-Object PSObject -Property @{
+		ProcessFamily = "Acabado"
+		ProcessID = "QAA-110"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Acabado"
+		ProcessID = "QAA-120"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Acabado"
+		ProcessID = "QAA-121"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Acabado"
+		ProcessID = "QAA-130"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Desbaste"
+		ProcessID = "QAD-250"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Desbaste"
+		ProcessID = "QAD-251"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Desbaste"
+		ProcessID = "QAD-252"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Desbaste"
+		ProcessID = "QAD-260"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Rectificado"
+		ProcessID = "QAR-300"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Rectificado"
+		ProcessID = "QAR-310"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Rectificado"
+		ProcessID = "QAR-350"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = "Rectificado"
+		ProcessID = "QAR-370"
+	}
+	New-Object PSObject -Property @{
+		ProcessFamily = ""
+		ProcessID = ""
+	}
+
+)
+
 function InitializeWindow
 {
 	#begin rules applying commonly
@@ -6,7 +64,8 @@ function InitializeWindow
     InitializeCategory
     InitializeNumSchm
     InitializeBreadCrumb
-    InitializeFileNameValidation
+	InitializeFileNameValidation
+	InitializeProcesses
 	#end rules applying commonly
 	$mWindowName = $dsWindow.Name
 	switch($mWindowName)
@@ -23,15 +82,42 @@ function InitializeWindow
 	$global:expandBreadCrumb = $true	
 }
 
-function AddinLoaded
-{
-	#Executed when DataStandard is loaded in Inventor/AutoCAD
+function InitializeProcesses {
+
+	Log -Message "$($MyInvocation.MyCommand.Name)"
+
+	$global:MainProcesses = @(
+		"Desbaste"
+		"Acabado"
+		"Rectificado"
+		""
+	)
+	$dsWindow.FindName("CmbxFamiliaProcesos").ItemsSource = $global:MainProcesses
+	$dsWindow.FindName("CmbxFamiliaProcesos").SelectedIndex = "0"
+	$dsWindow.FindName("CmbxFamiliaProcesos").add_SelectionChanged({
+		$global:selectedIDProcesses = GetIDProcesses
+		$dsWindow.FindName("CmbxIDProcesos").ItemsSource = $selectedIDProcesses
+		$dsWindow.FindName("CmbxIDProcesos").SelectedIndex = "0"
+	})
 }
 
-function AddinUnloaded
-{
-	#Executed when DataStandard is unloaded in Inventor/AutoCAD
+function GetIDProcesses {
+
+	Log -Message "$($MyInvocation.MyCommand.Name)"
+
+	$family =$dsWindow.FindName("CmbxFamiliaProcesos").SelectedItem
+
+	if($family){
+		$familyCode = $family[0]
+	}
+	Log -Message "$($MyInvocation.MyCommand.Name) >>> Selected family: '$family ' - FamilyCode: '$familyCode'"
+
+	$selectedProcesses = $global:SpecificProcesses | where {
+		$_.ProcessId[2] -like "*$familyCode*"
+	}
+	return @($selectedProcesses.ProcessId)
 }
+
 
 function InitializeCategory()
 {
@@ -39,7 +125,7 @@ function InitializeCategory()
     {
 		if (-not $Prop["_SaveCopyAsMode"].Value)
 		{
-            $Prop["_Category"].Value = $UIString["CAT1"]
+			$Prop["_Category"].Value = $UIString["CAT1"]
         }
     }
 }
